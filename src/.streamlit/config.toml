@@ -1,0 +1,12 @@
+[theme]
+primaryColor = "#ff4b4b"
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#f0f2f6"
+textColor = "#31333f"
+font = "sans serif"
+
+[theme.sidebar]
+primaryColor = "#5C59F3"
+backgroundColor = "#5C59F3"          # sidebar's main background
+secondaryBackgroundColor = "#e9e8fb" # widget/background accents in sidebar
+textColor = "#FFFFFF"

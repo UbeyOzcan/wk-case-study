@@ -1,3 +1,8 @@
+select * from public.claims_mrh; 
+
+select sum("premiumHT" ) from public.contrats_mrh; 
+
+CREATE TABLE public.contrats_mrh_new AS 
 WITH yearly_splits AS (
     SELECT 
         "contractId",
@@ -28,8 +33,8 @@ WITH yearly_splits AS (
     WHERE "coverageStartDate" IS NOT NULL 
       AND "coverageEndDate" IS NOT NULL
       AND "coverageStartDate"::date <= "coverageEndDate"::date
-)
-CREATE TABLE public.contrats_mrh_split (
+), 
+final_tab as (
 SELECT 
     "contractId",
     "subscriptionYear",
@@ -39,13 +44,40 @@ SELECT
     "riskZone",
     "formula",
     "franchise",
+    "premiumHT",
     "brokerCommission",
     "coverageStartDate",
     "coverageEndDate",
     "cancellationDate",
     "cancellationReason",
+    accident_year,
+    --split_start AS split_coverage_start,
+    --split_end AS split_coverage_end,
+    --(split_end - split_start) + 1 AS days_in_year,
     ("premiumHT" * ((split_end - split_start) + 1)) / NULLIF(("coverageEndDate"::date - "coverageStartDate"::date) + 1, 0)::numeric AS allocated_premium,
+    ("brokerCommission" * ((split_end - split_start) + 1)) / NULLIF(("coverageEndDate"::date - "coverageStartDate"::date) + 1, 0)::numeric AS allocated_broker_commission,
     round(((split_end - split_start) + 1)/365.0, 2) AS exposure
 FROM yearly_splits
-WHERE split_start <= split_end
-ORDER BY "contractId", accident_year ) ; 
+WHERE split_start <= split_end)
+SELECT * FROM final_tab ; 
+
+
+-- CONTROLS
+SELECT count(DISTINCT "contractId")  FROM public.contrats_mrh 
+
+union all 
+
+SELECT COUNT(DISTINCT "contractId") FROM public.contrats_mrh_new ;
+
+SELECT SUM("premiumHT") FROM public.contrats_mrh
+
+union all
+
+select SUM(allocated_premium) FROM public.contrats_mrh_new ;
+
+
+select "propertyType", count(distinct "contractId") from public.contrats_mrh GROUP BY "propertyType"
+
+union all
+
+select "propertyType", count(distinct "contractId") from public.contrats_mrh_new GROUP BY "propertyType"    ;

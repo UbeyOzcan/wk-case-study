@@ -3,8 +3,19 @@ name = "wk-case-study"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
+authors = [
+    { name = "UbeyOzcan", email = "ozcanubey@outlook.com" }
+]
 requires-python = ">=3.14"
-dependencies = []
+dependencies = [
+    "chainladder>=0.8.26",
+    "ipython>=9.17.1",
+    "numpy>=2.5.2",
+    "pandas>=3.0.5",
+    "plotly>=7.0.0",
+    "psycopg2-binary>=2.9.12",
+    "streamlit>=1.63.0",
+]
 
 [project.scripts]
 wk-case-study = "wk_case_study:main"
