@@ -5,7 +5,9 @@ import numpy as np
 import plotly.express as px
 
 
+st.set_page_config(layout="wide")
 
+st.title("Portfolio")
 
 @st.cache_data
 def get_data():
@@ -44,7 +46,6 @@ data['Premium bins'] = pd.cut(
     bins=[0, 130, 190, 250, 310, 370, 430, 490, 700],
     labels=['0-130', '130-190', '190-250', '250-310', '310-370', '370-430', '430-490', '490-700'])
 
-st.dataframe(data, hide_index=True)
 
 
 def composition(df:pd.DataFrame, rfs:str):
@@ -115,4 +116,4 @@ with st.expander("Premium Distribution analysis"):
     df_formula_mean_pivot = df_formula_mean.pivot(index='Year', columns='formula', values='premiumHT').reset_index()
     st.write("Mean Premium by Year and Formula")
     st.dataframe(df_formula_mean_pivot, hide_index=True)
-    st.plotly_chart(composition(data_formula, rfs_formula)["fig"], use_container_width=True)
+    st.plotly_chart(composition(data_formula, 'Premium bins')["fig"], use_container_width=True)
